@@ -31,9 +31,23 @@ public class UserService {
         return (List<Role>) rolesRepository.findAll();
     }
 
-    public void save(User user) {
-        encryptPassword(user);
-        userRepository.save(user);
+    public User save(User user) {
+        boolean isUpdatingUser = (user.getId() != null);
+
+        if (isUpdatingUser) {
+            User existingUser = userRepository.findById(user.getId()).get();
+
+            if (user.getPassword().isEmpty()) {
+                user.setPassword(existingUser.getPassword());
+            } else {
+                encryptPassword(user);
+            }
+
+        } else {
+            encryptPassword(user);
+        }
+
+        return userRepository.save(user);
     }
 
     private void encryptPassword(User user) {
