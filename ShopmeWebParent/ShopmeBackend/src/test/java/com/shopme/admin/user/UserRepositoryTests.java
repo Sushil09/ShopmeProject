@@ -123,4 +123,22 @@ public class UserRepositoryTests {
 
         assertThat(userList.size()).isEqualTo(4);
     }
+
+    @Test
+    public void testSearchedUsers(){
+        String name = "ana";
+
+        int pageNumber=0;
+        int pageSize=4;
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<User> userPage = userRepository.findAll(name, pageable);
+
+        List<User> userList = userPage.getContent();
+
+        userList.forEach(user-> System.out.println(user));
+
+        assertThat(userList.size()).isGreaterThan(0);
+
+    }
 }
