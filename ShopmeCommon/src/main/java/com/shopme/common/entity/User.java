@@ -1,5 +1,8 @@
 package com.shopme.common.entity;
 
+import org.hibernate.FetchMode;
+import org.hibernate.annotations.Fetch;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,7 +30,7 @@ public class User {
     private String photos;
     private Boolean isEnabled;
 
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -128,5 +131,10 @@ public class User {
         if (id == null || photos == null) return "/images/default-user.png";
 
         return "/user-photos/" + this.id + "/" + this.photos;
+    }
+
+    @Transient
+    public String getFullName() {
+        return firstName + " " + lastName;
     }
 }
